@@ -32,8 +32,12 @@ app.post('/', async (req, res) => {
     await axios.post(telegramURL, payload);
     res.json({ message: 'Mensaje enviado con éxito', ip });
   } catch (error) {
-    res.status(500).json({ error: error.message || 'Error enviando mensaje' });
+  if (error instanceof Error) {
+    res.status(500).json({ error: error.message });
+  } else {
+    res.status(500).json({ error: String(error) });
   }
+}
 });
 
 app.listen(PORT, () => {
